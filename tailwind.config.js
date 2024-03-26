@@ -1,9 +1,20 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [],
+  content: [
+    "./index.html",
+    "./src/**/*.{vue,js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.js",
+  ],
   theme: {
-    extend: {},
+    colors: {
+      primary: "#ff5900",
+      black: "#000",
+      gray: "#848484",
+      secondary: "#572364"
+    }
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin'),
+  ],
 }
 

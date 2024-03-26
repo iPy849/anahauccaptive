@@ -1,3 +1,8 @@
+# Tareas
+- [x] Instalar tailwind y configurar proyecto
+- [ ] Entender cómo funciona [flowbite](https://flowbite.com)
+- [ ] Hacer un diseño básico para el sitio
+
 # Anahuac Captive Portal Info Webapp
 
 Muestra información de la universidad al entrar a su red wifi. Para más información comunicarse con los responsables a cargo.
