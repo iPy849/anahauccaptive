@@ -3,6 +3,14 @@
 - [ ] Entender cómo funciona [flowbite](https://flowbite.com)
 - [ ] Hacer un diseño básico para el sitio
 
+# Recursos:
+- Vue 3
+- Flowbite
+- Tailwind
+- [HeroIcons](https://www.npmjs.com/package/@heroicons/vue)
+- VueUse
+- FramerVue
+
 # Anahuac Captive Portal Info Webapp
 
 Muestra información de la universidad al entrar a su red wifi. Para más información comunicarse con los responsables a cargo.
