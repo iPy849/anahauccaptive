@@ -9,3 +9,9 @@
     @apply m-0 p-0;
   }
 }
+
+@layer components {
+  .round-button {
+      @apply shadow-sm text-white bg-grey dark:bg-primary focus:ring-0 focus:outline-none rounded-full p-2.5 text-center inline-flex items-center me-2;
+  }
+}

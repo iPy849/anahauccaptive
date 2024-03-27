@@ -1,7 +1,8 @@
 # Tareas
 - [x] Instalar tailwind y configurar proyecto
-- [ ] Entender cómo funciona [flowbite](https://flowbite.com)
+- [x] Entender cómo funciona [flowbite](https://flowbite.com)
 - [ ] Hacer un diseño básico para el sitio
+- [ ] Implementar navegación y datos en JSON
 
 # Recursos:
 - Vue 3

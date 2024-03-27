@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import DrawerComponent from "./components/DrawerComponent.vue";
-import DarkModeButtonComponent from "./components/DarkModeButtonComponent.vue";
+import PageControlsComponent from "./components/controls/PageControlsComponent.vue";
 
 import { onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'
 // initialize components based on data attribute selectors
 onMounted(() => {
-    initFlowbite();
+  initFlowbite();
 })
 </script>
 
 <template>
-  <DarkModeButtonComponent/>
-  <DrawerComponent/>
+  <PageControlsComponent />
 </template>
