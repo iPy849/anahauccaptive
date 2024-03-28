@@ -5,7 +5,7 @@ import DrawerButtonComponent from './DrawerButtonComponent.vue';
 </script>
 <template>
     <DrawerComponent />
-    <div class="fixed bottom-0 right-0 p-2">
+    <div class="absolute bottom-0 right-0 px-2 py-4">
         <DarkModeButtonComponent class="my-2 block"/>
         <DrawerButtonComponent class="block"/>
     </div>
