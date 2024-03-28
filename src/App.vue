@@ -11,6 +11,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <LandingPageComponent class="p-2"/>
+  <LandingPageComponent/>
   <PageControlsComponent/>
 </template>
