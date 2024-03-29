@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import PageControlsComponent from "./components/controls/PageControlsComponent.vue";
-import LandingPageComponent from "./components/LandingPageComponent.vue";
+import PageControlsComponent from "@cmp/controls/PageControlsComponent.vue";
+import LandingPageComponent from "@cmp/landingPage/LandingPageComponent.vue";
 
 import { onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'

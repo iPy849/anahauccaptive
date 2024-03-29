@@ -11,6 +11,10 @@ export default {
       black: "#000",
       grey: "#848484",
       secondary: "#572364"
+    },
+    backgroundImage: {
+      'light-banner': "url('src/assets/imgs/banner-l.png')",
+      'dark-banner': "url('src/assets/imgs/banner-d.png')"
     }
   },
   plugins: [

@@ -2,20 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @layer base {
   body {
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
     box-sizing: border-box;
-    font-family: sans-serif;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
     @apply m-0 p-0 dark:bg-black;
   }
 
   #app {
-    @apply max-w-screen-lg h-screen m-auto relative overflow-hidden;
+    @apply max-w-screen-lg h-screen m-auto relative overflow-x-hidden;
   }
 }
 
 @layer components {
   .round-button {
-      @apply shadow-sm text-white bg-grey dark:bg-primary focus:ring-0 focus:outline-none rounded-full p-2.5 text-center inline-flex items-center me-2;
+      @apply shadow-sm text-white bg-black dark:bg-primary focus:outline-none border-[1px] border-white rounded-full p-2.5 text-center inline-flex items-center me-2;
+  }
+
+  .text-color {
+    @apply text-black dark:text-primary;
+  }
+
+  .text-color-inverted {
+    @apply text-white;
   }
 }
