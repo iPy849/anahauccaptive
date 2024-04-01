@@ -1,6 +1,7 @@
 <template>
-    <section class="p-4">
-        <h2 class="pb-2 text-2xl font-bold text-color">Eventos de la semana:</h2>
+    <section class="p-4 bg-primary">
+        <h2 class="pb-2 text-2xl font-semibold text-color-inverted text-end">Eventos de la semana</h2>
+        <p class="pb-4 text-sm text-color-inverted text-end">Esta semana estará ocurriendo</p>
 
 
         <div id="default-carousel" class="relative w-full" data-carousel="slide">

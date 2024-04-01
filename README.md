@@ -1,8 +1,9 @@
 # Tareas
 - [x] Instalar tailwind y configurar proyecto
 - [x] Entender cómo funciona [flowbite](https://flowbite.com)
-- [ ] Hacer un diseño básico para el sitio
+- [x] Hacer un diseño básico para el sitio
 - [ ] Implementar navegación y datos en JSON
+- [ ] Preguntar si podemos hacer un deploy de appwrite en azure
 
 # Recursos:
 - Vue 3

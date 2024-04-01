@@ -14,7 +14,7 @@
   }
 
   #app {
-    @apply max-w-screen-lg h-screen m-auto relative overflow-x-hidden;
+    @apply h-screen m-auto relative max-w-5xl;
   }
 }
 
@@ -24,7 +24,7 @@
   }
 
   .text-color {
-    @apply text-black dark:text-primary;
+    @apply text-black dark:text-white;
   }
 
   .text-color-inverted {

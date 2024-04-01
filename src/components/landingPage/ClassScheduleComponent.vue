@@ -1,87 +1,113 @@
+<script setup lang="ts">
+import { computed, reactive, ref } from 'vue';
+import services from '@svc/data';
+import { useWindowSize } from '@vueuse/core'
+
+const { width } = useWindowSize()
+
+const classroomOffset = ref(0);
+const selectedClassroom = ref(-1);
+const classrooms = reactive(services.GetClassroomData(10, 10));
+const currentClassroomData = ref(classrooms[0]);
+
+// NOTE: Estos controles están hechos con las patas
+const classroomsToShow = () => Math.round(width.value / 100);
+const isAllClassroomsInRange = () => classroomsToShow() >= classrooms.length;
+
+const decreaseSelectorOffset = () => {
+    if (isAllClassroomsInRange()) return;
+    classroomOffset.value === 0 ? 0 : classroomOffset.value--;
+    selectedClassroom.value = -1;
+}
+
+const increaseSelectorOffset = () => {
+    if (isAllClassroomsInRange()) return;
+    classroomOffset.value = ++classroomOffset.value % classrooms.length
+    selectedClassroom.value = -1;
+}
+
+const selectSelectorClassroom = (i: number) => {
+    selectedClassroom.value = i; // Puro UI
+
+    const selectedIndex = (i + classroomOffset.value) % classrooms.length;
+    currentClassroomData.value = classrooms[selectedIndex];
+};
+
+const showClassrooms = computed(() => {
+    const maxQty = classroomsToShow();
+    if (isAllClassroomsInRange()) {
+        classroomOffset.value = 0;
+        return classrooms;
+    }
+
+    let leftElemDiff = maxQty + classroomOffset.value - classrooms.length;
+
+    if (leftElemDiff > 0) {
+        leftElemDiff = Math.abs(leftElemDiff);
+        return [...classrooms.slice(classroomOffset.value), ...classrooms.slice(0, leftElemDiff)];
+    } else return [...classrooms.slice(classroomOffset.value, maxQty + classroomOffset.value)];
+});
+</script>
 <template>
-    <section class="bg-secondary dark:bg-primary p-4">
-        <h2 class="pb-2 text-2xl font-bold text-color-inverted text-end">Horario de salones</h2>
+    <!-- TODO: Funciona para la UI tiene problemas, arreglarlo y terminar el diseño -->
+    <section class="p-4">
+        <h2 class="pb-2 text-2xl font-semibold text-color">Horario de salones</h2>
+        <p class="pb-4 text-sm text-color">Selecciona una salón para ver su horario</p>
 
-        <div id="accordion-flush" data-accordion="collapse"
-            data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-            data-inactive-classes="text-gray-500 dark:text-gray-400">
-            <h2 id="accordion-flush-heading-1">
-                <button type="button"
-                    class="flex items-center justify-between w-full py-5 font-medium rtl:text-right text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 gap-3"
-                    data-accordion-target="#accordion-flush-body-1" aria-expanded="true"
-                    aria-controls="accordion-flush-body-1">
-                    <span>What is Flowbite?</span>
-                    <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 5 5 1 1 5" />
-                    </svg>
-                </button>
-            </h2>
-            <div id="accordion-flush-body-1" class="hidden" aria-labelledby="accordion-flush-heading-1">
-                <div class="py-5 border-b border-gray-200 dark:border-gray-700">
-                    <p class="mb-2 text-gray-500 dark:text-gray-400">Flowbite is an open-source library of interactive
-                        components built on top of Tailwind CSS including buttons, dropdowns, modals, navbars, and more.</p>
-                    <p class="text-gray-500 dark:text-gray-400">Check out this guide to learn how to <a
-                            href="/docs/getting-started/introduction/"
-                            class="text-blue-600 dark:text-blue-500 hover:underline">get started</a> and start developing
-                        websites even faster with components on top of Tailwind CSS.</p>
-                </div>
-            </div>
-            <h2 id="accordion-flush-heading-2">
-                <button type="button"
-                    class="flex items-center justify-between w-full py-5 font-medium rtl:text-right text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 gap-3"
-                    data-accordion-target="#accordion-flush-body-2" aria-expanded="false"
-                    aria-controls="accordion-flush-body-2">
-                    <span>Is there a Figma file available?</span>
-                    <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 5 5 1 1 5" />
-                    </svg>
-                </button>
-            </h2>
-            <div id="accordion-flush-body-2" class="hidden" aria-labelledby="accordion-flush-heading-2">
-                <div class="py-5 border-b border-gray-200 dark:border-gray-700">
-                    <p class="mb-2 text-gray-500 dark:text-gray-400">Flowbite is first conceptualized and designed using the
-                        Figma software so everything you see in the library has a design equivalent in our Figma file.</p>
-                    <p class="text-gray-500 dark:text-gray-400">Check out the <a href="https://flowbite.com/figma/"
-                            class="text-blue-600 dark:text-blue-500 hover:underline">Figma design system</a> based on the
-                        utility classes from Tailwind CSS and components from Flowbite.</p>
-                </div>
-            </div>
-            <h2 id="accordion-flush-heading-3">
-                <button type="button"
-                    class="flex items-center justify-between w-full py-5 font-medium rtl:text-right text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 gap-3"
-                    data-accordion-target="#accordion-flush-body-3" aria-expanded="false"
-                    aria-controls="accordion-flush-body-3">
-                    <span>What are the differences between Flowbite and Tailwind UI?</span>
-                    <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 5 5 1 1 5" />
-                    </svg>
-                </button>
-            </h2>
-            <div id="accordion-flush-body-3" class="hidden" aria-labelledby="accordion-flush-heading-3">
-                <div class="py-5 border-b border-gray-200 dark:border-gray-700">
-                    <p class="mb-2 text-gray-500 dark:text-gray-400">The main difference is that the core components from
-                        Flowbite are open source under the MIT license, whereas Tailwind UI is a paid product. Another
-                        difference is that Flowbite relies on smaller and standalone components, whereas Tailwind UI offers
-                        sections of pages.</p>
-                    <p class="mb-2 text-gray-500 dark:text-gray-400">However, we actually recommend using both Flowbite,
-                        Flowbite Pro, and even Tailwind UI as there is no technical reason stopping you from using the best
-                        of two worlds.</p>
-                    <p class="mb-2 text-gray-500 dark:text-gray-400">Learn more about these technologies:</p>
-                    <ul class="ps-5 text-gray-500 list-disc dark:text-gray-400">
-                        <li><a href="https://flowbite.com/pro/"
-                                class="text-blue-600 dark:text-blue-500 hover:underline">Flowbite Pro</a></li>
-                        <li><a href="https://tailwindui.com/" rel="nofollow"
-                                class="text-blue-600 dark:text-blue-500 hover:underline">Tailwind UI</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <!-- Navegación de salones -->
+        <nav class="pb-4 sticky top-0 bg-white dark:bg-black">
+            <ul class="flex justify-center gap-2">
+                <li @click="decreaseSelectorOffset">
+                    <span class="selector-arrows rounded-s-lg">
+                        <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 1 1 5l4 4" />
+                        </svg>
+                    </span>
+                </li>
+                <li class="text-sm border border-primary rounded-full text-black dark:text-white"
+                    v-for="(classroom, index) in showClassrooms" :key="index" @click="selectSelectorClassroom(index)"
+                    :class="{ 'bg-primary text-white': selectedClassroom === index }">
+                    <span href="#" class="flex items-center justify-center px-3 h-8">{{
+                        classroom.Name }}</span>
+                </li>
+                <li @click="increaseSelectorOffset">
+                    <span class="selector-arrows rounded-e-lg">
+                        <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 9 4-4-4-4" />
+                        </svg>
+                    </span>
+                </li>
+            </ul>
+        </nav>
 
+        <!-- Timeline -->
+        <ol class="py-4 flex flex-shrink-0 overflow-x-scroll snap-x">
+
+            <li v-for="(lesson, index) in currentClassroomData.Lessons" :key="index"
+                class="relative px-8 max-w-48 w-1/3 md:w-1/4 lg:w-1/5 grid place-content-center snap-center">
+                <span class="absolute w-full h-1 top-1/2 -translate-y-1/2 bg-primary" />
+                <div
+                    class="z-10 p-2 m-2 rounded-lg bg-primary text-white border-4 border-white dark:border-black text-sm relative inline-block">
+                    {{ lesson.Name }}
+                    <small :class="{ '-top-5': index % 2 !== 0, '-bottom-5': index % 2 === 0 }"
+                        class="absolute p-1 rounded-full -left-8 bg-white dark:bg-black border border-primary text-xs text-color">
+                        {{ lesson.StartsAt.toTimeString().slice(0, 8) }}</small>
+                </div>
+                <svg class="w-8 absolute text-primary -right-4 top-1/2 -translate-y-1/2" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m9 5 7 7-7 7" />
+                </svg>
+            </li>
+        </ol>
     </section>
 </template>
+<style lang="scss">
+.selector-arrows {
+    @apply flex items-center justify-center px-3 h-8 text-black dark:text-white bg-white dark:bg-primary border border-primary dark:border-white active:bg-primary dark:active:bg-white;
+}
+</style>
