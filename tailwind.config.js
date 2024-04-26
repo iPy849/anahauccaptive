@@ -9,6 +9,7 @@ export default {
     colors: {
       primary: "#ff5900",
       primary_accent: "#ea580c",
+      primary_darker: "#c2410c",
       black: "#000",
       grey: "#848484",
       secondary: "#572364"
