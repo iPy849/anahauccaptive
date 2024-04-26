@@ -1,6 +1,6 @@
 import Classroom from "../../typings/classroom";
 
-function GetClassroomData(simulatedClassroomsN: number, simulatedLessonsN: number): Classroom[] {
+export function GetClassroomData(simulatedClassroomsN: number, simulatedLessonsN: number): Classroom[] {
     const simulatedClassrooms: Classroom[] = [];
 
     for (let i = 0; i < simulatedClassroomsN; i++) {
@@ -25,5 +25,3 @@ function GetClassroomData(simulatedClassroomsN: number, simulatedLessonsN: numbe
 
     return simulatedClassrooms;
 }
-
-export default { GetClassroomData };

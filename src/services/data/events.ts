@@ -1,7 +1,7 @@
 import Event from "@type/event";
 
 
-function GetNextEvents(): Event[] {
+export function GetNextEvents(): Event[] {
     const testId = "<fake_id>";
     const testDate = new Date(Date.now());
 
@@ -17,8 +17,4 @@ function GetNextEvents(): Event[] {
         },)
     }
     return events;
-}
-
-export default {
-    GetNextEvents
 }

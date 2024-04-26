@@ -1,5 +1,5 @@
-import events from './events';
-import classrooms from './classrooms';
+import * as events from './events';
+import * as classrooms from './classrooms';
 
 export default {
     ...events,

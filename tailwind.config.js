@@ -8,6 +8,7 @@ export default {
   theme: {
     colors: {
       primary: "#ff5900",
+      primary_accent: "#ea580c",
       black: "#000",
       grey: "#848484",
       secondary: "#572364"

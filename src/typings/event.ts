@@ -6,5 +6,5 @@ export default interface Event {
     StartTDateime: Date,
     EndDateTime: Date,
     BuildingID: string,
-    BuildingData: Building
+    BuildingData: Building | null
 }
