@@ -1,8 +1,7 @@
 <template>
     <section class="p-4">
         <h2 class="pb-2 text-xl text-color font-semibold text-center">Síguenos en nuestras redes sociales</h2>
-
-        <div class="flex justify-center gap-4 text-color">
+        <div class="flex gap-4 text-color bg-primary w-fit m-auto py-2 px-4 rounded-full">
             <a href="#" class="bg-white border-2 border-primary p-2 rounded-full text-black">
                 <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
