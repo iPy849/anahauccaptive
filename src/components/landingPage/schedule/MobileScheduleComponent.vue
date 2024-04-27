@@ -2,48 +2,52 @@
 import { computed, reactive, ref } from 'vue';
 import { GetClassroomData } from '@svc/data/classrooms.ts';
 
+const classroomsToShowQty = 5;
+
 const selectedClassroom = ref(0);
 const classrooms = reactive(GetClassroomData(10, 10));
 const currentClassroomData = ref(classrooms[0]);
 
+
+let selectionOffset = ref(0);
+
 // NOTE: Estos controles están hechos con las patas
+const decreaseSelector = (decreaseBy: number) => {
+    if (selectionOffset.value === 0) return;
+    selectionOffset.value -= decreaseBy;
+    assignActionValue(selectedClassroom.value);
+}
 
-const decreaseSelector = () => { if (selectedClassroom.value !== 0) selectedClassroom.value-- }
+const increaseSelector = (increaseBy: number) => {
+    if (selectionOffset.value + classroomsToShowQty >= classrooms.length) return;
+    selectionOffset.value += increaseBy;
+    assignActionValue(selectedClassroom.value);
+}
 
-const increaseSelector = () => { if (selectedClassroom.value !== classrooms.length - 1) selectedClassroom.value++ }
+const classroomSelector = (classroomIndex: number) => {
+    if (classroomIndex === selectedClassroom.value) return;
+    assignActionValue(classroomIndex);
+    selectedClassroom.value = classroomIndex;
+}
 
-const setSelector = (index: number) => { selectedClassroom.value = index }
+// TODO: No se asigna bien el valor cuando se cambia de salón con las flechas
+const assignActionValue = (classroomIndex:number ) => {
+    console.log("Hola");
+    currentClassroomData.value = classroomsToShow.value[classroomIndex];
+}
 
+const classroomsToShow = computed(() => {
+    return classrooms.slice(selectionOffset.value, selectionOffset.value + classroomsToShowQty)
+});
 
-// const selectSelectorClassroom = (i: number) => {
-//     selectedClassroom.value = i; // Puro UI
-
-//     const selectedIndex = (i + classroomOffset.value) % classrooms.length;
-//     currentClassroomData.value = classrooms[selectedIndex];
-// };
-
-// const showClassrooms = computed(() => {
-//     const maxQty = classroomsToShow();
-//     if (isAllClassroomsInRange()) {
-//         classroomOffset.value = 0;
-//         return classrooms;
-//     }
-
-//     let leftElemDiff = maxQty + classroomOffset.value - classrooms.length;
-
-//     if (leftElemDiff > 0) {
-//         leftElemDiff = Math.abs(leftElemDiff);
-//         return [...classrooms.slice(classroomOffset.value), ...classrooms.slice(0, leftElemDiff)];
-//     } else return [...classrooms.slice(classroomOffset.value, maxQty + classroomOffset.value)];
-// });
 </script>
 <template>
     <!-- Navegación de salones -->
     <nav class="m-auto w-fit">
         <ul class="flex items-center -space-x-px h-10 text-base">
-            <li @click="decreaseSelector">
+            <li @click="decreaseSelector(1)">
                 <button
-                    class="flex bg-primary items-center justify-center px-4 h-10 ms-0 leading-tight text-white rounded-s-lg hover:bg-primary_darker  ">
+                    class="flex bg-primary items-center justify-center px-2 h-10 ms-0 leading-tight text-white rounded-s-lg hover:bg-primary_darker  ">
                     <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         fill="none" viewBox="0 0 6 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -52,16 +56,16 @@ const setSelector = (index: number) => { selectedClassroom.value = index }
                 </button>
             </li>
 
-            <li v-for="(classroom, index) in classrooms" :key="index" @click="setSelector(index)">
+            <li v-for="(classroom, index) in classroomsToShow" :key="index" @click="classroomSelector(index)">
                 <button
                     :class="{ 'bg-primary text-white border-0': selectedClassroom === index, 'bg-white dark:bg-gray-900 text-primary border': selectedClassroom !== index }"
-                    class="flex items-center justify-center px-4 h-10 leading-tight  border-gray-300 dark:border-gray-700">
+                    class="flex items-center justify-center px-2 h-10 leading-tight  border-gray-300 dark:border-gray-700">
                     {{ classroom.Name }}
                 </button>
             </li>
-            <li @click="increaseSelector">
+            <li @click="increaseSelector(1)">
                 <button
-                    class="flex bg-primary items-center justify-center px-4 h-10 ms-0 leading-tight text-white rounded-e-lg hover:bg-primary_darker  ">
+                    class="flex bg-primary items-center justify-center px-2 h-10 ms-0 leading-tight text-white rounded-e-lg hover:bg-primary_darker  ">
                     <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         fill="none" viewBox="0 0 6 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
