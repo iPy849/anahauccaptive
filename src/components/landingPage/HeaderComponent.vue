@@ -17,7 +17,7 @@ const toggleDropdownIcon = () => { isDropdownOpen.value = !isDropdownOpen.value 
 <template>
     <header class="w-100 py-2 bg-primary bg-cover bg-no-repeat bg-center grid place-content-center">
         <button id="BuildingSelectorButton" data-dropdown-toggle="BuildingSelector"
-            class="border-2 rounded-full active:bg-primary_accent text-white bg-transparent font-bold text-xl px-5 py-2.5 text-center inline-flex items-center gap-2"
+            class="border-2 rounded-full active:bg-primary_accent text-white bg-transparent font-bold text-lg px-5 py-2.5 text-center inline-flex items-center gap-2"
             type="button" @click="toggleDropdownIcon">Estás en {{ locations[currentLocationIndex] }}
             <svg v-if="isDropdownOpen" class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" fill="none" viewBox="0 0 24 24">

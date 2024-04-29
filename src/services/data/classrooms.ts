@@ -1,22 +1,26 @@
 import Classroom from "../../typings/classroom";
 
-export function GetClassroomData(simulatedClassroomsN: number, simulatedLessonsN: number): Classroom[] {
+
+export function GetClassroomData(simulatedClassroomsN: number, simulatedLessonsN: number,  classRoomsByFloor: number = 8): Classroom[] {
     const simulatedClassrooms: Classroom[] = [];
 
     for (let i = 0; i < simulatedClassroomsN; i++) {
 
         const simulatedClassroomData: Classroom = {
-            Id: `[Classroom Id ${i}]`,
-            Name: `11`+i,
+            Id: `1${Math.floor(i/classRoomsByFloor) + 1}`+i,
+            Name: `s 1${Math.floor(i) + 1}`+i,
             Lessons: []
         };
     
         for (let j = 0; j < simulatedLessonsN; j++) {
-            simulatedClassroomData.Lessons.push({
+            const lastDuration = simulatedClassroomData.Lessons?.length 
+            ? simulatedClassroomData.Lessons![j - 1].DurationUnits
+            : 0;
+            simulatedClassroomData.Lessons!.push({
                 Name: `Lesson c${i} ${j}`,
                 Teacher: `Teacher ${j}`,
-                StartsAt: new Date(Date.now() + (90 * j * 60 * 1000)),
-                IsFree: j % 4 == 0
+                StartsAt: new Date(Date.now() + (30 * lastDuration * j * 60 * 1000)),
+                DurationUnits: (j % 3) + 1
             });
         }
 

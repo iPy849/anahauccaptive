@@ -10,6 +10,8 @@ export default {
       primary: "#ff5900",
       primary_accent: "#ea580c",
       primary_darker: "#c2410c",
+      primary_light: "#ffedd5",
+      primary_lighter: "#fed7aa",
       black: "#000",
       grey: "#848484",
       secondary: "#572364"
