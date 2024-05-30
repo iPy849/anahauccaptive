@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
 import { GetClassroomData } from '@svc/data/classrooms.ts';
+import { slotTimeRange, numberOfRows } from '@/consts.ts'
 
 const floorSelector = ref(0);
 const classrooms = reactive(GetClassroomData(10, 10));
@@ -33,14 +34,20 @@ const classroomsPerFloor = computed(() => {
     return result;
 });
 
+console.log(classroomsPerFloor);
+
+
 const classroomsHeaders = computed(() => {
     const headers = ["Hora"];
     headers.push(...classroomsPerFloor.value[floorSelector.value].map(classroom => classroom.Name));
     return headers;
 });
 
-// TODO: Meter info de horas, falta procesarla
-
+const DateStringPerSlot = (slotIndex: number) => {
+    const date = new Date(Date.now());
+    date.setHours(7, 0, 0, 0);
+    return new Date(date.getTime() + slotIndex * slotTimeRange).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
 </script>
 <template>
     <div>
@@ -56,34 +63,30 @@ const classroomsHeaders = computed(() => {
 
         <!-- Tabla -->
         <div class="relative overflow-x-auto rounded-e-lg rounded-bl-lg shadow-lg">
-            <table class="w-full text-sm text-left">
+            <table class="w-full text-sm text-left overflow-x-auto">
                 <thead class="text-xs text-white uppercase bg-primary">
                     <tr>
-                        <th
-                            v-for="(header, index) in classroomsHeaders"
-                            :key="index"
-                            scope="col" class="px-6 py-3">
+                        <th v-for="(header, index) in classroomsHeaders" :key="index" scope="col"
+                            class="px-6 py-3 first:w-20 max-w-15">
                             {{ header }}
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- TODO: Aquí hay que organizar la información-->
-                    <tr v-for="(classroom, index) in classroomsPerFloor[floorSelector]" :key="index"
+                    <tr v-for="rowIndex in numberOfRows" :key="rowIndex"
                         class="odd:bg-primary_light even:bg-primary_lighter border-b border-gray-300">
-                        <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap">
-                            {{ classroom.Name }}
-                        </th>
-                        <td class="px-6 py-4">
-                            Silver
-                        </td>
 
-                        <td class="px-6 py-4">
-                            Laptop
-                        </td>
-                        <td class="px-6 py-4">
-                            $2999
-                        </td>
+                        <th scope="row" class="text-center text-black whitespace-nowrap">
+                                    {{ DateStringPerSlot(rowIndex - 1) }}
+                        </th>
+
+                        <th scope="row" 
+                        v-for="(classrooms, classroomIndex) in classroomsPerFloor[floorSelector]"
+                            :key="classroomIndex" 
+                            v-if="rowIndex < classrooms.Lessons.length"
+                            :rowspan="classrooms.Lessons[rowIndex].DurationUnits">
+                        </th>
                     </tr>
                 </tbody>
             </table>

@@ -6,7 +6,7 @@ import LargeScheduleComponent from "@cmp/landingPage/schedule/LargeScheduleCompo
     <section class="p-4">
         <h2 class="pb-2 text-2xl font-semibold text-color">Horario de salones</h2>
         <p class="pb-4 text-sm text-color">Selecciona una salón para ver su horario</p>
-        <MobileScheduleComponent class="md:hidden" />
+        <!-- <MobileScheduleComponent class="md:hidden" /> -->
         <LargeScheduleComponent class="hidden md:block"/>
     </section>
 </template>

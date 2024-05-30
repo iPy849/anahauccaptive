@@ -1,6 +1,6 @@
 export default interface Lesson {
     Name: string,
     Teacher: string,
-    StartsAt: Date,
+    StartsAtUnit: number,
     DurationUnits: number
 }

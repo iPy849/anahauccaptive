@@ -11,17 +11,16 @@ export function GetClassroomData(simulatedClassroomsN: number, simulatedLessonsN
             Name: `s 1${Math.floor(i) + 1}`+i,
             Lessons: []
         };
-    
+        
+        let startLessonAtUnit = 0;
         for (let j = 0; j < simulatedLessonsN; j++) {
-            const lastDuration = simulatedClassroomData.Lessons?.length 
-            ? simulatedClassroomData.Lessons![j - 1].DurationUnits
-            : 0;
             simulatedClassroomData.Lessons!.push({
                 Name: `Lesson c${i} ${j}`,
                 Teacher: `Teacher ${j}`,
-                StartsAt: new Date(Date.now() + (30 * lastDuration * j * 60 * 1000)),
+                StartsAtUnit: startLessonAtUnit,
                 DurationUnits: (j % 3) + 1
             });
+            startLessonAtUnit += (j % 3) + 2;
         }
 
         simulatedClassrooms.push(simulatedClassroomData);
