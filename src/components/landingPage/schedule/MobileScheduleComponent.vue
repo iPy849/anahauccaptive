@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
 import { GetClassroomData } from '@svc/data/classrooms.ts';
+import { DateStringPerTimeUnit } from './utils';
+
 
 const classroomsToShowQty = 5;
 const selectionOffset = ref(0);
@@ -76,8 +78,8 @@ const assignActionValue = (classroomIndex: number) => {
                     {{ lesson.Name }}
                     <small :class="{ '-top-5': index % 2 !== 0, '-bottom-5': index % 2 === 0 }"
                         class="absolute p-1 rounded-full -left-8 bg-white dark:bg-black border border-primary text-xs text-color">
-                        {{ lesson.StartsAt.toTimeString().slice(0, 8) }}</small>
-                </div>
+                        {{  DateStringPerTimeUnit(lesson.StartsAtUnit) }}</small>
+                    </div>
                 <svg class="w-8 absolute text-primary -right-4 top-1/2 -translate-y-1/2" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

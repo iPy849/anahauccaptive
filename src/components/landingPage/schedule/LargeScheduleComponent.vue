@@ -1,92 +1,101 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { GetClassroomData } from '@svc/data/classrooms.ts';
-import { slotTimeRange, numberOfRows } from '@/consts.ts'
+import { numberOfRows } from '@/consts.ts'
+import { SortClassroomPerFloor, DateStringPerTimeUnit } from './utils.ts';
+import TimeUnitMaskState from './typings/TimeUnitMaskState.ts';
 
 const floorSelector = ref(0);
-const classrooms = reactive(GetClassroomData(10, 10));
+const classroomsPerFloor = SortClassroomPerFloor(GetClassroomData(10, 10));
 
-const classroomsPerFloor = computed(() => {
-    const classroomPerFloorData = [];
-    const notAbleToClassify = [];
-    for (const classroom of classrooms) {
-        try {
-            const floor = parseInt(classroom.Id[1]);
+const currentFloorLessonsByTimeUnitMask = computed(() => {
+    const floorClassrooms = [...classroomsPerFloor[floorSelector.value]]; // Floor copy
+    const lessonsByTimeUnit: number[][] = [];
 
-            if (floor > classroomPerFloorData.length) {
-                const diff = floor - classroomPerFloorData.length;
-                for (let index = 0; index < diff; index++) {
-                    classroomPerFloorData.push([]);
-                }
+    for (const classroom of floorClassrooms) {
+        const classRoomLessonByTimeUnit: number[] = [];
+
+        let classroomLessonIndex = 0;
+        let spanUnit = 0;
+        const lessons = classroom.Lessons!;
+
+        for (let scheduleTimeUnit = 0; scheduleTimeUnit < numberOfRows; scheduleTimeUnit++) {
+
+            // No hay nada más que iterar
+            if (classroomLessonIndex >= lessons.length) {
+                classRoomLessonByTimeUnit.push(TimeUnitMaskState.Free);
+                continue;
             }
-            classroomPerFloorData[floor - 1].push(classroom);
 
-        } catch (error) {
-            notAbleToClassify.push(classroom);
+            // Ocupado
+            if (spanUnit > 0) {
+                classRoomLessonByTimeUnit.push(TimeUnitMaskState.Busy);
+                spanUnit--;
+            }
+            // Empieza una clase
+            else if (lessons[classroomLessonIndex].StartsAtUnit === scheduleTimeUnit) {
+                classRoomLessonByTimeUnit.push(classroomLessonIndex)
+                spanUnit = lessons[classroomLessonIndex].DurationUnits - 1;
+                classroomLessonIndex++;
+            }
+            // Hay un espacio libre
+            else classRoomLessonByTimeUnit.push(TimeUnitMaskState.Free);
         }
+        lessonsByTimeUnit.push(classRoomLessonByTimeUnit);
     }
-
-    const result = !notAbleToClassify.length
-        ? [...classroomPerFloorData]
-        : [...classroomPerFloorData, notAbleToClassify];
-
-    console.log(result);
-    return result;
+    return lessonsByTimeUnit;
 });
-
-console.log(classroomsPerFloor);
-
-
-const classroomsHeaders = computed(() => {
-    const headers = ["Hora"];
-    headers.push(...classroomsPerFloor.value[floorSelector.value].map(classroom => classroom.Name));
-    return headers;
-});
-
-const DateStringPerSlot = (slotIndex: number) => {
-    const date = new Date(Date.now());
-    date.setHours(7, 0, 0, 0);
-    return new Date(date.getTime() + slotIndex * slotTimeRange).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-}
 </script>
 <template>
-    <div>
+    <div class="w-fit">
         <!-- Selector -->
         <div class="inline-flex border-2 border-primary hover:border-primary_darker bg-primary hover:bg-primary_darker rounded-t-lg overflow-hidden"
             role="group">
-            <button type="button" @click="floorSelector = index" v-for="(_, index) in classroomsPerFloor" :key="index"
-                :class="{ 'border-b-4 border-white': index === floorSelector }"
+            <button type="button" @click="floorSelector = floorIndex - 1"
+                v-for="floorIndex in classroomsPerFloor.length" :key="floorIndex"
+                :class="{ 'border-b-4 border-white': (floorIndex - 1) === floorSelector }"
                 class="px-4 py-2 text-white hover:bg-primary_accent">
-                <span> Piso {{ index + 1 }}</span>
+                <span> Piso {{ floorIndex }}</span>
             </button>
         </div>
 
         <!-- Tabla -->
-        <div class="relative overflow-x-auto rounded-e-lg rounded-bl-lg shadow-lg">
-            <table class="w-full text-sm text-left overflow-x-auto">
-                <thead class="text-xs text-white uppercase bg-primary">
+        <div class="relative h-96 overflow-x-hidden overflow-y-scroll rounded-e-lg rounded-bl-lg shadow-lg">
+            <table class="text-sm text-center">
+                <!-- Headers -->
+                <thead class="text-xs text-white uppercase bg-primary sticky top-0">
                     <tr>
-                        <th v-for="(header, index) in classroomsHeaders" :key="index" scope="col"
-                            class="px-6 py-3 first:w-20 max-w-15">
+                        <th class="py-3 w-20 border border-primary_lighter">
+                            Hora
+                        </th>
+                        <th v-for="(header, index) in classroomsPerFloor[floorSelector].map(classroom => classroom.Name)"
+                            :key="index" scope="col" class="py-3 w-auto border border-primary_lighter">
                             {{ header }}
                         </th>
                     </tr>
                 </thead>
+                <!-- Datos -->
                 <tbody>
-                    <!-- TODO: Aquí hay que organizar la información-->
-                    <tr v-for="rowIndex in numberOfRows" :key="rowIndex"
-                        class="odd:bg-primary_light even:bg-primary_lighter border-b border-gray-300">
+                    <tr v-for="rowIndex in numberOfRows" :key="rowIndex" class="bg-primary_light">
 
-                        <th scope="row" class="text-center text-black whitespace-nowrap">
-                                    {{ DateStringPerSlot(rowIndex - 1) }}
-                        </th>
+                        <td class="bg-primary text-white border border-primary_lighter">
+                            {{ DateStringPerTimeUnit(rowIndex - 1) }}
+                        </td>
 
-                        <th scope="row" 
-                        v-for="(classrooms, classroomIndex) in classroomsPerFloor[floorSelector]"
-                            :key="classroomIndex" 
-                            v-if="rowIndex < classrooms.Lessons.length"
-                            :rowspan="classrooms.Lessons[rowIndex].DurationUnits">
-                        </th>
+                        <template v-for="(classroomMask, classroomIndex) in currentFloorLessonsByTimeUnitMask"
+                            :key="classroomIndex">
+                            <td 
+                                class="text-black bg-primary_lighter hover:bg-primary hover:text-white"
+                                v-if="classroomMask[rowIndex - 1] >= 0" 
+                                :rowspan="classroomsPerFloor[floorSelector][classroomIndex].Lessons![classroomMask[rowIndex - 1]].DurationUnits"
+                            >
+                                {{ classroomsPerFloor[floorSelector][classroomIndex].Lessons![classroomMask[rowIndex - 1]].Name }}
+                            </td>
+                            <td 
+                                class="border border-primary_lighter"
+                                v-else-if="classroomMask[rowIndex - 1] === TimeUnitMaskState.Free"
+                            ></td>
+                        </template>
                     </tr>
                 </tbody>
             </table>
